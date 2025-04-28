@@ -1,19 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quick Products</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Product Fetch Test</title>
 </head>
 <body>
-
   <h1>Products List</h1>
+  <div id="products"></div>
 
-  <!-- This div will hold the products dynamically -->
-  <div id="products" style="padding: 20px; font-size: 18px;"></div>
+  <script>
+    const SUPABASE_URL = "https://jmrttmtgvoqapxfkfboc.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptcnR0bXRndm9xYXB4ZmtmYm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4MjQ3MDEsImV4cCI6MjA2MTQwMDcwMX0.8v9jA7wj3n5D0SD6BE-TdaBJVqsI1NOt4WIlUDqxfjY";
 
-  <!-- Link to your products.js -->
-  <script src="products.js"></script>
+    async function fetchProducts() {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*`, {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+      });
 
+      if (!res.ok) {
+        console.error('Failed to fetch products:', res.status, await res.text());
+        return;
+      }
+
+      const products = await res.json();
+
+      const productsDiv = document.getElementById('products');
+      productsDiv.innerHTML = '';
+
+      products.forEach(product => {
+        const p = document.createElement('p');
+        p.textContent = `${product.name} - ${product.price}`;
+        productsDiv.appendChild(p);
+      });
+    }
+
+    fetchProducts();
+  </script>
 </body>
 </html>
