@@ -19,10 +19,7 @@
 
   <script>
     const SUPABASE_URL = "https://jmrttmtgvoqapxfkfboc.supabase.co";
-    const SUPABASE_ANON_KEY = "
-NEXT_PUBLIC_SUPABASE_URL=https://jmrttmtgvoqapxfkfboc.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptcnR0bXRndm9xYXB4ZmtmYm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4MjQ3MDEsImV4cCI6MjA2MTQwMDcwMX0.8v9jA7wj3n5D0SD6BE-TdaBJVqsI1NOt4WIlUDqxfjY
-            ";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptcnR0bXRndm9xYXB4ZmtmYm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4MjQ3MDEsImV4cCI6MjA2MTQwMDcwMX0.8v9jA7wj3n5D0SD6BE-TdaBJVqsI1NOt4WIlUDqxfjY";
 
     async function fetchProducts() {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*`, {
@@ -72,16 +69,16 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd
           body: JSON.stringify([{ name, price }])
         });
 
-        if (!res.ok) {
-          const error = await res.text();
-          throw new Error(error);
-        }
+        const responseText = await res.text();
+        console.log("Insert response:", responseText);
+
+        if (!res.ok) throw new Error(responseText);
 
         message.textContent = "Product added!";
         e.target.reset();
         fetchProducts();
       } catch (err) {
-        console.error(err);
+        console.error("Insert failed:", err);
         message.textContent = "Failed to add product.";
       }
     });
