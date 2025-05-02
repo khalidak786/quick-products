@@ -7,11 +7,22 @@
 </head>
 <body>
   <h1>Products List</h1>
-  <div id="products"></div>
+  <div id="products">Loading...</div>
+
+  <h2>Add a New Product</h2>
+  <form id="productForm">
+    <input type="text" id="name" placeholder="Product Name" required />
+    <input type="number" id="price" placeholder="Price" required />
+    <button type="submit">Add Product</button>
+    <p id="formMessage"></p>
+  </form>
 
   <script>
     const SUPABASE_URL = "https://jmrttmtgvoqapxfkfboc.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptcnR0bXRndm9xYXB4ZmtmYm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4MjQ3MDEsImV4cCI6MjA2MTQwMDcwMX0.8v9jA7wj3n5D0SD6BE-TdaBJVqsI1NOt4WIlUDqxfjY";
+    const SUPABASE_ANON_KEY = "
+NEXT_PUBLIC_SUPABASE_URL=https://jmrttmtgvoqapxfkfboc.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptcnR0bXRndm9xYXB4ZmtmYm9jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU4MjQ3MDEsImV4cCI6MjA2MTQwMDcwMX0.8v9jA7wj3n5D0SD6BE-TdaBJVqsI1NOt4WIlUDqxfjY
+            ";
 
     async function fetchProducts() {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*`, {
@@ -21,22 +32,59 @@
         },
       });
 
+      const productsDiv = document.getElementById('products');
       if (!res.ok) {
-        console.error('Failed to fetch products:', res.status, await res.text());
+        const error = await res.text();
+        console.error("Fetch error:", error);
+        productsDiv.textContent = "Failed to load products.";
         return;
       }
 
       const products = await res.json();
-
-      const productsDiv = document.getElementById('products');
       productsDiv.innerHTML = '';
-
-      products.forEach(product => {
-        const p = document.createElement('p');
-        p.textContent = `${product.name} - ${product.price}`;
-        productsDiv.appendChild(p);
-      });
+      if (!products.length) {
+        productsDiv.textContent = "No products found.";
+      } else {
+        products.forEach(product => {
+          const p = document.createElement('p');
+          p.textContent = `${product.name} - $${product.price}`;
+          productsDiv.appendChild(p);
+        });
+      }
     }
+
+    document.getElementById("productForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const price = parseFloat(document.getElementById("price").value);
+      const message = document.getElementById("formMessage");
+
+      message.textContent = "Adding product...";
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+          method: "POST",
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            "Content-Type": "application/json",
+            Prefer: "return=representation"
+          },
+          body: JSON.stringify([{ name, price }])
+        });
+
+        if (!res.ok) {
+          const error = await res.text();
+          throw new Error(error);
+        }
+
+        message.textContent = "Product added!";
+        e.target.reset();
+        fetchProducts();
+      } catch (err) {
+        console.error(err);
+        message.textContent = "Failed to add product.";
+      }
+    });
 
     fetchProducts();
   </script>
