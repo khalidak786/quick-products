@@ -14,8 +14,16 @@
   </nav>
 
   <main>
-    <h1>Products</h1>
-    <div id="products"></div>
+   <section>
+  <h2>Add New Product</h2>
+  <form id="productForm">
+    <input type="text" id="name" placeholder="Product Name" required />
+    <input type="number" id="price" placeholder="Price" required />
+    <button type="submit">Add Product</button>
+    <p id="formMessage"></p>
+  </form>
+</section>
+
   </main>
 
   <script src="products.js"></script>
