@@ -1,18 +1,21 @@
 body {
   font-family: Arial, sans-serif;
   margin: 2rem;
+  margin-left: 2rem; /* Added margin from the left */
   background: #f9f9f9;
   color: #333;
 }
 
 nav a {
   margin-right: 1rem;
+  margin-left: 1rem; /* Added margin from the left */
   text-decoration: none;
   color: #0077cc;
 }
 
 main h1 {
   margin-bottom: 1rem;
+  margin-left: 2rem; /* Added margin from the left */
 }
 
 #products p {
@@ -20,10 +23,12 @@ main h1 {
   background: #fff;
   border: 1px solid #ddd;
   margin: 0.5rem 0;
+  margin-left: 1rem; /* Added margin from the left */
 }
 
 form {
   margin-top: 2rem;
+  margin-left: 2rem; /* Added margin from the left */
   display: flex;
   flex-direction: column;
   max-width: 300px;
@@ -32,11 +37,12 @@ form {
 form input,
 form button {
   margin: 0.5rem 0;
-  padding: 0.5rem;
+  margin-left: 1rem; /* Added margin from the left */
 }
 
 #formMessage {
   margin-top: 0.5rem;
+  margin-left: 1rem; /* Added margin from the left */
   font-size: 0.9rem;
   color: green;
 }
